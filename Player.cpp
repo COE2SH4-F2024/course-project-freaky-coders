@@ -59,7 +59,7 @@ void Player::updatePlayerDir()
         }
     }
 }
-g
+
 void Player::movePlayer()
 {
     // PPA3 Finite State Machine logic
