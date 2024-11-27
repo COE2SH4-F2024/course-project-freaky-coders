@@ -72,33 +72,40 @@ void RunLogic(void)
 
 void DrawScreen(void)
 {
-    int i, j;
-
     MacUILib_clearScreen();
 
-    for (i = 0; i < Y_SIZE; i++)
+    for (int i = 0; i < Y_SIZE; i++)
     {
-        for (j = 0; j < X_SIZE; j++)
+        for (int j = 0; j < X_SIZE; j++)
         {
+            bool isSnake = false;
 
-            if (j == player->getPlayerPos().pos->x && i == player->getPlayerPos().pos->y)
+            for (int k = 0; k < player->getPlayerPosList()->getSize(); k++)
             {
-                MacUILib_printf("%c", player->getPlayerPos().symbol);
+                objPos bodyPart = player->getPlayerPosList()->getElement(k);
+                if (bodyPart.pos->x == j && bodyPart.pos->y == i)
+                {
+                    MacUILib_printf("%c", bodyPart.symbol); // Draw the snake body part
+                    isSnake = true;
+                    break;
+                }
             }
-
-            else if (j == 0 || j == (X_SIZE - 1) || i == 0 || i == (Y_SIZE - 1))
+            if (!isSnake)
             {
-                MacUILib_printf("#");
-            }
+                if (j == 0 || j == (X_SIZE - 1) || i == 0 || i == (Y_SIZE - 1))
+                {
+                    MacUILib_printf("#");
+                }
 
-            else if (j == food->getFoodPos().pos->x && i == food->getFoodPos().pos->y)
-            {
-                MacUILib_printf("@");
-            }
+                else if (j == food->getFoodPos().pos->x && i == food->getFoodPos().pos->y)
+                {
+                    MacUILib_printf("@");
+                }
 
-            else
-            {
-                MacUILib_printf(" ");
+                else
+                {
+                    MacUILib_printf(" ");
+                }
             }
         }
         MacUILib_printf("\n");
