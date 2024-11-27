@@ -3,6 +3,7 @@
 #include "objPos.h"
 #include "Player.h"
 #include "GameMechs.h"
+#include "Food.h"
 
 using namespace std;
 
@@ -18,15 +19,16 @@ void DrawScreen(void);
 void LoopDelay(void);
 void CleanUp(void);
 
-Player *p;
-GameMechs *g;
+Player *player;
+GameMechs *gameMechs;
+Food *food;
 
 int main(void)
 {
 
     Initialize();
 
-    while (g->getExitFlagStatus() == false)
+    while (gameMechs->getExitFlagStatus() == false)
     {
         GetInput();
         RunLogic();
@@ -42,23 +44,30 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
 
-    g = new GameMechs(X_SIZE, Y_SIZE);
-    p = new Player(g);
+    gameMechs = new GameMechs(X_SIZE, Y_SIZE);
+    player = new Player(gameMechs);
+    food = new Food();
+    food->generateFood(player->getPlayerPos());
 }
 
 void GetInput(void)
 {
     if (MacUILib_hasChar())
     {
-        g->setInput(MacUILib_getChar());
+        gameMechs->setInput(MacUILib_getChar());
     }
 }
 
 void RunLogic(void)
 {
-    p->updatePlayerDir();
-    p->movePlayer();
-    g->clearInput();
+    player->updatePlayerDir();
+    player->movePlayer();
+
+    if (gameMechs->getInput() == 'c')
+    {
+        food->generateFood(player->getPlayerPos());
+    }
+    gameMechs->clearInput();
 }
 
 void DrawScreen(void)
@@ -72,14 +81,19 @@ void DrawScreen(void)
         for (j = 0; j < X_SIZE; j++)
         {
 
-            if (j == p->getPlayerPos().pos->x && i == p->getPlayerPos().pos->y)
+            if (j == player->getPlayerPos().pos->x && i == player->getPlayerPos().pos->y)
             {
-                MacUILib_printf("%c", p->getPlayerPos().symbol);
+                MacUILib_printf("%c", player->getPlayerPos().symbol);
             }
 
             else if (j == 0 || j == (X_SIZE - 1) || i == 0 || i == (Y_SIZE - 1))
             {
                 MacUILib_printf("#");
+            }
+
+            else if (j == food->getFoodPos().pos->x && i == food->getFoodPos().pos->y)
+            {
+                MacUILib_printf("@");
             }
 
             else
@@ -89,7 +103,7 @@ void DrawScreen(void)
         }
         MacUILib_printf("\n");
     }
-    MacUILib_printf("Score: %d", g->getScore());
+    MacUILib_printf("Score: %d", gameMechs->getScore());
 }
 
 void LoopDelay(void)
@@ -100,7 +114,7 @@ void LoopDelay(void)
 void CleanUp(void)
 {
     MacUILib_clearScreen();
-    if (g->getLoseFlagStatus())
+    if (gameMechs->getLoseFlagStatus())
     {
         MacUILib_printf("You lost.");
     }
@@ -110,8 +124,9 @@ void CleanUp(void)
         MacUILib_printf("You Won!");
     }
 
-    delete p;
-    delete g;
+    delete player;
+    delete gameMechs;
+    delete food;
 
     MacUILib_uninit();
 }
