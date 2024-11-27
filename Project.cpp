@@ -63,9 +63,16 @@ void RunLogic(void)
     player->updatePlayerDir();
     player->movePlayer();
 
-    if (gameMechs->getInput() == 'c')
+    // Check if the snake head is on same location as food
+    if ((player->getPlayerPos().pos->x == food->getFoodPos().pos->x) && (player->getPlayerPos().pos->y == food->getFoodPos().pos->y))
     {
+        // Add length to the tail
+        objPos newTail(player->getPlayerPos().pos->x, player->getPlayerPos().pos->y, '*');
+        player->getPlayerPosList()->insertTail(newTail);
+
+        // Generate new food everytime you eat something
         food->generateFood(player->getPlayerPos());
+        gameMechs->incrementScore(); // Increment the score
     }
     gameMechs->clearInput();
 }
@@ -90,6 +97,7 @@ void DrawScreen(void)
                     break;
                 }
             }
+
             if (!isSnake)
             {
                 if (j == 0 || j == (X_SIZE - 1) || i == 0 || i == (Y_SIZE - 1))
