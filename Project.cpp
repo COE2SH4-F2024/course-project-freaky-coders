@@ -45,8 +45,8 @@ void Initialize(void)
     MacUILib_clearScreen();
 
     gameMechs = new GameMechs(X_SIZE, Y_SIZE);
-    player = new Player(gameMechs);
     food = new Food();
+    player = new Player(gameMechs, food);
     food->generateFood(player->getPlayerPos());
 }
 
@@ -62,18 +62,6 @@ void RunLogic(void)
 {
     player->updatePlayerDir();
     player->movePlayer();
-
-    // Check if the snake head is on same location as food
-    if ((player->getPlayerPos().pos->x == food->getFoodPos().pos->x) && (player->getPlayerPos().pos->y == food->getFoodPos().pos->y))
-    {
-        // Add length to the tail
-        objPos newTail(player->getPlayerPos().pos->x, player->getPlayerPos().pos->y, '*');
-        player->getPlayerPosList()->insertTail(newTail);
-
-        // Generate new food everytime you eat something
-        food->generateFood(player->getPlayerPos());
-        gameMechs->incrementScore(); // Increment the score
-    }
     gameMechs->clearInput();
 }
 

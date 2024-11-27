@@ -1,18 +1,17 @@
 #include "Player.h"
 #include "objPosArrayList.h"
 
-Player::Player(GameMechs *thisGMRef)
+Player::Player(GameMechs *thisGMRef, Food* foodReference)
 {
     mainGameMechsRef = thisGMRef;
     myDir = STOP;
+    food = foodReference;
 
     // more actions to be included
 
     // Instantiating PlayPosition ArrayList as snake will hold multiple locations
     playerPosList = new objPosArrayList();
-    playerPosList->insertHead(objPos(10, 5, '*')); // Head 
-    playerPosList->insertTail(objPos(9, 5, '*'));  // Middle segment
-    playerPosList->insertTail(objPos(8, 5, '*'));  // Tail segment
+    playerPosList->insertHead(objPos(10, 5, '*')); //Starting Position 
 }
 
 Player::~Player()
@@ -108,13 +107,22 @@ void Player::movePlayer()
 
     default:
         break;
+
+    
     }
 
-    // Insert the new head position at the start of the list
-    playerPosList->insertHead(newHead);
-
-    // Remove the tail to simulate movement
-    playerPosList->removeTail();
+        // Check for food collision
+    if (newHead.pos->x == food->getFoodPos().pos->x && newHead.pos->y == food->getFoodPos().pos->y)
+    {
+        playerPosList->insertHead(newHead); 
+        food->generateFood(currentHead);   
+        mainGameMechsRef->incrementScore(); 
+    }
+    else
+    {
+        playerPosList->insertHead(newHead); // Regular movement
+        playerPosList->removeTail();        // Remove the tail
+    }
 }
 
 
