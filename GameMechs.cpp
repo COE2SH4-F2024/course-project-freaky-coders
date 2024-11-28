@@ -70,8 +70,9 @@ void GameMechs::setExitTrue()
 
 void GameMechs::setLoseFlag()
 {
-    loseFlag = 0;
+    loseFlag = 1;
 }
+
 
 void GameMechs::setInput(char this_input)
 {
