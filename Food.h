@@ -1,4 +1,4 @@
-#include "objPos.h"
+#include "objPosArrayList.h"
 #include "stdlib.h"
 #include "time.h"
 
@@ -7,15 +7,14 @@
 
 class Food
 {
-    private:
+private:
     objPos foodPos;
 
-    public:
+public:
     Food();
     ~Food();
 
-    void generateFood(objPos blockOff);
+    void generateFood(objPosArrayList* blockOff);
     objPos getFoodPos() const;
-
 };
 #endif

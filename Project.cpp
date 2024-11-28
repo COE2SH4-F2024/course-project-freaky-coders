@@ -50,7 +50,7 @@ void Initialize(void)
     player = new Player(gameMechs, food);
 
     // Generate first coordinates for food
-    food->generateFood(player->getPlayerPos());
+    food->generateFood(player->getPlayerPosList());
 }
 
 void GetInput(void)

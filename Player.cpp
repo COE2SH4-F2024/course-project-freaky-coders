@@ -123,9 +123,10 @@ void Player::movePlayer()
     if (newHead.pos->x == food->getFoodPos().pos->x && newHead.pos->y == food->getFoodPos().pos->y)
     {
         playerPosList->insertHead(newHead);
-        food->generateFood(currentHead);
+        food->generateFood(playerPosList);
         mainGameMechsRef->incrementScore();
     }
+    
     else
     {
         playerPosList->insertHead(newHead); // Regular movement

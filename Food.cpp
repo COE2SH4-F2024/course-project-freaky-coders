@@ -10,7 +10,7 @@ Food::~Food()
     // No heap members
 }
 
-void Food::generateFood(objPos blockOff)
+void Food::generateFood(objPosArrayList* blockOff)
 {
     int x_coord, y_coord, valid_coords;
     char diffSymbol;
@@ -27,9 +27,13 @@ void Food::generateFood(objPos blockOff)
         x_coord = rand() % (20 - 2) + 1;
         y_coord = rand() % (10 - 2) + 1;
 
-        if (x_coord == blockOff.pos->x && y_coord == blockOff.pos->y)
+        // Check every element of snake list
+        for (int i = 0; i < blockOff->getSize(); i++)
         {
-            valid_coords = 0;
+            if (x_coord == blockOff->getElement(i).pos->x && y_coord == blockOff->getElement(i).pos->y)
+            {
+                valid_coords = 0;
+            }
         }
     }
 
