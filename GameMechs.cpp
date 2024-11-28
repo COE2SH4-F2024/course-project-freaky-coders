@@ -25,7 +25,7 @@ GameMechs::GameMechs(int boardX, int boardY)
 // do you need a destructor?
 GameMechs::~GameMechs()
 {
-    // So far no items on heap
+    // No items on heap, no destructor necessary
 }
 
 bool GameMechs::getExitFlagStatus() const
@@ -83,5 +83,3 @@ void GameMechs::clearInput()
 {
     input = 0;
 }
-
-// More methods should be added here

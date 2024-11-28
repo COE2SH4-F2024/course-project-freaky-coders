@@ -1,19 +1,26 @@
 #include "Food.h"
 
-Food::Food() {
+Food::Food()
+{
     foodPos = objPos();
 }
 
-Food::~Food() {
+Food::~Food()
+{
     // No heap members
 }
 
-void Food::generateFood(objPos blockOff) {
+void Food::generateFood(objPos blockOff)
+{
     int x_coord, y_coord, valid_coords;
     char diffSymbol;
+
+    // Seed random with the current time
     srand(time(NULL));
 
     valid_coords = 0;
+
+    // Randomly generate new coordinates until valid ones are found
     while (!valid_coords)
     {
         valid_coords = 1;
@@ -26,11 +33,12 @@ void Food::generateFood(objPos blockOff) {
         }
     }
 
+    // Set the food position to these newly generated random coordinates
     foodPos.pos->x = x_coord;
     foodPos.pos->y = y_coord;
-
 }
 
-objPos Food::getFoodPos() const {
+objPos Food::getFoodPos() const
+{
     return foodPos;
 }

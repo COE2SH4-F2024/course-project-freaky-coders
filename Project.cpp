@@ -44,9 +44,12 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
 
+    // Initialize three main objects
     gameMechs = new GameMechs(X_SIZE, Y_SIZE);
     food = new Food();
     player = new Player(gameMechs, food);
+
+    // Generate first coordinates for food
     food->generateFood(player->getPlayerPos());
 }
 
@@ -69,12 +72,15 @@ void DrawScreen(void)
 {
     MacUILib_clearScreen();
 
+    // Iterate through the board
     for (int i = 0; i < Y_SIZE; i++)
     {
         for (int j = 0; j < X_SIZE; j++)
         {
+
             bool isSnake = false;
 
+            // Check if the current position corresponds to a part of the snake
             for (int k = 0; k < player->getPlayerPosList()->getSize(); k++)
             {
                 objPos bodyPart = player->getPlayerPosList()->getElement(k);
@@ -88,21 +94,25 @@ void DrawScreen(void)
 
             if (!isSnake)
             {
+                // Check if its a Border
                 if (j == 0 || j == (X_SIZE - 1) || i == 0 || i == (Y_SIZE - 1))
                 {
                     MacUILib_printf("#");
                 }
 
+                // Check if its Food
                 else if (j == food->getFoodPos().pos->x && i == food->getFoodPos().pos->y)
                 {
                     MacUILib_printf("@");
                 }
 
+                // If nothing else, simply a whitespace
                 else
                 {
                     MacUILib_printf(" ");
                 }
             }
+
         }
         MacUILib_printf("\n");
     }

@@ -39,6 +39,7 @@ void Player::updatePlayerDir()
         switch (input)
         {
         case 27:
+            // Escape key, exit game
             mainGameMechsRef->setExitTrue();
             break;
 
@@ -141,5 +142,3 @@ void Player::movePlayer()
         }
     }
 }
-
-// More methods to be added
