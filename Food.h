@@ -3,6 +3,9 @@
 #include "time.h"
 
 #ifndef FOOD_H
+
+#define X_SIZE 20
+#define Y_SIZE 10
 #define FOOD_H
 
 class Food
@@ -14,7 +17,7 @@ public:
     Food();
     ~Food();
 
-    void generateFood(objPosArrayList* blockOff);
+    void generateFood(objPosArrayList *blockOff);
     objPos getFoodPos() const;
 };
 #endif

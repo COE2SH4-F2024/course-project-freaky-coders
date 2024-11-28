@@ -24,8 +24,8 @@ void Food::generateFood(objPosArrayList* blockOff)
     while (!valid_coords)
     {
         valid_coords = 1;
-        x_coord = rand() % (20 - 2) + 1;
-        y_coord = rand() % (10 - 2) + 1;
+        x_coord = rand() % (X_SIZE - 2) + 1;
+        y_coord = rand() % (Y_SIZE - 2) + 1;
 
         // Check every element of snake list
         for (int i = 0; i < blockOff->getSize(); i++)
