@@ -73,6 +73,7 @@ void Player::movePlayer()
 {
     objPos currentHead = playerPosList->getHeadElement(); // Get current head position
     objPos newHead = currentHead;                         // Create a new position object based on current position
+    bool foodCollision = false;
 
     if (myDir == STOP)
     {
@@ -119,27 +120,38 @@ void Player::movePlayer()
         break;
     }
 
-    // Check for food collision
-    if (newHead.pos->x == food->getFoodPos().pos->x && newHead.pos->y == food->getFoodPos().pos->y)
-    {
-        playerPosList->insertHead(newHead);
-        food->generateFood(playerPosList);
-        mainGameMechsRef->incrementScore();
-    }
-    
-    else
-    {
-        playerPosList->insertHead(newHead); // Regular movement
-        playerPosList->removeTail();        // Remove the tail
-    }
-
     // Check for self collision
     for (int i = 1; i < playerPosList->getSize(); i++)
     {
-        if (newHead.pos->x == playerPosList->getElement(i).pos->x && newHead.pos->y == playerPosList->getElement(i).pos->y)
+        if (playerPosList->getElement(i).isPosEqual(&newHead))
         {
             mainGameMechsRef->setLoseFlag();
             mainGameMechsRef->setExitTrue();
+            return;
         }
+    }
+
+    // Check for food collision
+    for (int i = 0; i < food->getFoodList()->getSize(); i++)
+    {
+        
+        if (food->getFoodList()->getElement(i).isPosEqual(&newHead))
+        {
+            playerPosList->insertHead(newHead);
+            if (!(food->getFoodList()->getElement(i).getSymbol() == '@'))
+            {
+                // Just normal movement if its a special food (with score increment)
+                playerPosList->removeTail();
+            }
+            foodCollision = true;
+            food->generateFood(playerPosList);
+            mainGameMechsRef->incrementScore();
+        }
+    }
+
+    if (!foodCollision)
+    {
+        playerPosList->insertHead(newHead); // Regular movement
+        playerPosList->removeTail();        // Remove the tail
     }
 }

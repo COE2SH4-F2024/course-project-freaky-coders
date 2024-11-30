@@ -10,7 +10,6 @@ using namespace std;
 #define DELAY_CONST 100000
 #define X_SIZE 20
 #define Y_SIZE 10
-#define ITEM_NUMBER 5
 
 void Initialize(void);
 void GetInput(void);
@@ -79,6 +78,7 @@ void DrawScreen(void)
         {
 
             bool isSnake = false;
+            bool isFood = false;
 
             // Check if the current position corresponds to a part of the snake
             for (int k = 0; k < player->getPlayerPosList()->getSize(); k++)
@@ -92,7 +92,17 @@ void DrawScreen(void)
                 }
             }
 
-            if (!isSnake)
+            // Check if its Food
+            for(int k = 0; k < food->getFoodList()->getSize(); k++)
+            {
+                if(j == food->getFoodList()->getElement(k).pos->x && i == food->getFoodList()->getElement(k).pos->y)
+                {
+                    MacUILib_printf("%c", food->getFoodList()->getElement(k).getSymbol());
+                    isFood = true;
+                }
+            }
+            
+            if (!isSnake && !isFood)
             {
                 // Check if its a Border
                 if (j == 0 || j == (X_SIZE - 1) || i == 0 || i == (Y_SIZE - 1))
@@ -100,13 +110,7 @@ void DrawScreen(void)
                     MacUILib_printf("#");
                 }
 
-                // Check if its Food
-                else if (j == food->getFoodPos().pos->x && i == food->getFoodPos().pos->y)
-                {
-                    MacUILib_printf("@");
-                }
-
-                // If nothing else, simply a whitespace
+                // Otherwise just whitespace
                 else
                 {
                     MacUILib_printf(" ");
@@ -116,7 +120,7 @@ void DrawScreen(void)
         }
         MacUILib_printf("\n");
     }
-    MacUILib_printf("Score: %d", gameMechs->getScore());
+    MacUILib_printf("Score: %d\n", gameMechs->getScore());
 }
 
 void LoopDelay(void)

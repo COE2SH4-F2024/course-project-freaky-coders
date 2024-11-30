@@ -2,47 +2,111 @@
 
 Food::Food()
 {
-    foodPos = objPos();
+    foodBucket = new objPosArrayList();
+
+    // Three regular food items
+    for (int i = 0; i < (FOOD_ITEMS / 2 + FOOD_ITEMS % 2); i++)
+    {
+        foodBucket->insertHead(objPos(0, 0, '@'));
+    }
+
+    // Two special food items
+    for (int i = 0; i < FOOD_ITEMS / 2; i++)
+    {
+        char randomSymbol;
+        bool notValid = 1;
+
+        while (notValid)
+        {
+            notValid = 0;
+            randomSymbol = rand() % 95 + 32;
+            if(randomSymbol == '@' || randomSymbol == '#' || randomSymbol == ' ' || randomSymbol == '*')
+            {
+                notValid = 1;
+            }
+        }
+        foodBucket->insertHead(objPos(0, 0, randomSymbol));
+    }
+
 }
 
 Food::~Food()
 {
-    // No heap members
+    delete foodBucket;
 }
 
-void Food::generateFood(objPosArrayList* blockOff)
+void Food::generateFood(objPosArrayList *blockOff)
 {
     int x_coord, y_coord, valid_coords;
-    char diffSymbol;
+    int initial_size = foodBucket->getSize();
+    char symbolsList[initial_size];
+    bool notValid;
 
-    // Seed random with the current time
-    srand(time(NULL));
-
-    valid_coords = 0;
-
-    // Randomly generate new coordinates until valid ones are found
-    while (!valid_coords)
-    {
-        valid_coords = 1;
-        x_coord = rand() % (X_SIZE - 2) + 1;
-        y_coord = rand() % (Y_SIZE - 2) + 1;
-
-        // Check every element of snake list
-        for (int i = 0; i < blockOff->getSize(); i++)
+    // Generate random symbols for special food
+    for (int i = 0; i < 2; i++)
+    {   
+        notValid = 1;
+        while (notValid)
         {
-            if (x_coord == blockOff->getElement(i).pos->x && y_coord == blockOff->getElement(i).pos->y)
+            notValid = 0;
+            symbolsList[i] = rand() % 95 + 32;
+            if(symbolsList[i] == '@' || symbolsList[i] == '#' || symbolsList[i] == ' ' || symbolsList[i] == '*')
             {
-                valid_coords = 0;
+                notValid = 1;
             }
         }
     }
 
-    // Set the food position to these newly generated random coordinates
-    foodPos.pos->x = x_coord;
-    foodPos.pos->y = y_coord;
+    // Store symbols for normal food
+    for (int i = 2; i < initial_size; i++)
+    {   
+        symbolsList[i] = foodBucket->getElement(i).getSymbol();
+    }
+
+    // Reset the food
+    for (int i = 0; i < initial_size; i++)
+        foodBucket->removeTail();
+
+    // Seed random with the current time
+    srand(time(NULL));
+
+    for (int i = 0; i < initial_size; i++)
+    {
+        valid_coords = 0;
+
+        // Randomly generate new coordinates until valid ones are found
+        while (!valid_coords)
+        {
+            valid_coords = 1;
+            x_coord = rand() % (X_SIZE - 2) + 1;
+            y_coord = rand() % (Y_SIZE - 2) + 1;
+
+            // Check every element of snake list
+            for (int j = 0; j < blockOff->getSize(); j++)
+            {
+                if (x_coord == blockOff->getElement(j).pos->x && y_coord == blockOff->getElement(j).pos->y)
+                {
+                    valid_coords = 0;
+                }
+            }
+
+            // Check other food items to ensure no overlap
+            for (int j = 0; j < i; j++)
+            {
+                if (x_coord == foodBucket->getElement(j).pos->x && y_coord == foodBucket->getElement(j).pos->y)
+                {
+                    valid_coords = 0;
+                }
+            }
+        }
+
+        // Add new instance to list
+        objPos added_food = objPos(x_coord, y_coord, symbolsList[i]);
+        foodBucket->insertTail(added_food);
+    }
 }
 
-objPos Food::getFoodPos() const
+objPosArrayList *Food::getFoodList() const
 {
-    return foodPos;
+    return foodBucket;
 }

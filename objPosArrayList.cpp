@@ -15,6 +15,31 @@ objPosArrayList::~objPosArrayList()
     delete[] aList;
 }
 
+// Copy constructor (unused however implemented as per rule of 4)
+objPosArrayList::objPosArrayList(objPosArrayList &list)
+{
+    listSize = list.listSize;
+    arrayCapacity = ARRAY_MAX_CAP;
+    aList = new objPos[arrayCapacity];
+    for (int i = 0; i < listSize; i++)
+    {
+        aList[i] = list.aList[i];
+    }
+}
+
+// Copy Assignment Operator (unused however implemented as per rule of 4)
+objPosArrayList& objPosArrayList::operator=(objPosArrayList &list)
+{
+    listSize = list.listSize;
+    arrayCapacity = ARRAY_MAX_CAP;
+    for (int i = 0; i < listSize; i++)
+    {
+        aList[i] = list.aList[i];
+    }
+
+    return *this;
+}
+
 int objPosArrayList::getSize() const
 {
     return listSize;
@@ -81,7 +106,7 @@ objPos objPosArrayList::getTailElement() const
 }
 
 objPos objPosArrayList::getElement(int index) const
-{   
+{
     // Ensure the index is valid input
     if (index >= 0 && index < listSize)
     {

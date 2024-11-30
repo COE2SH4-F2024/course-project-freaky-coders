@@ -8,7 +8,6 @@ GameMechs::GameMechs()
     exitFlag = 0;
     loseFlag = 1;
     score = 0;
-    food = objPos(0, 0, '@');
 }
 
 GameMechs::GameMechs(int boardX, int boardY)
@@ -19,7 +18,6 @@ GameMechs::GameMechs(int boardX, int boardY)
     exitFlag = 0;
     loseFlag = 0;
     score = 0;
-    food = objPos(0, 0, '@');
 }
 
 // do you need a destructor?
